@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from .models import Topic, Entry
-from .forms import TopicForm, EntryForm
+from .models import Topic, Entry, TodoList
+from .forms import TopicForm, EntryForm, TodoForm
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 # Create your views here.
@@ -72,3 +72,23 @@ def edit_entry(request, entry_id):
             return redirect('learning_logs:topic', topic_id=topic.id)
     context = {'entry': entry, 'topic': topic, 'form': form}
     return render(request, 'learning_logs/edit_entry.html', context)
+
+@login_required
+def todo(request):
+    todo = TodoList.objects.filter(owner=request.user)
+    context = {'todo': todo}
+    return render (request, 'learning_logs/todo.html', context)
+
+@login_required
+def new_todo(request):
+    if request.method != 'POST':
+        form = TodoForm()
+    else:
+        form = TodoForm(data=request.POST)
+        if form.is_valid():
+            new_topic = form.save(commit=False)
+            new_topic.owner = request.user
+            new_topic.save()
+            return redirect('learning_logs:todo')
+    context = {'form': form}
+    return render(request, 'learning_logs/new_todo.html', context)

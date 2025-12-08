@@ -1,0 +1,12 @@
+{% extends "learning_logs/base.html" %}
+
+{% block content %}
+  <p>Add a new task:</p>
+  
+  <form action="{% url 'learning_logs:new_todo' %}" method='post'>
+    {% csrf_token %}
+    {{ form.as_div }}
+    <button name="submit">Add task</button>
+  </form>
+
+{% endblock content %}

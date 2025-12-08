@@ -20,3 +20,20 @@ class Entry(models.Model):
 
     def __str__(self):
         return f"{self.text[:50]}..."
+
+class TodoList(models.Model):
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null=True)
+    text = models.TextField()
+    date_added = models.DateTimeField(auto_now_add=True, null=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.text
+
+"""class TodoEntry(models.Model):
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
+    text = models.TextField()
+    date_added = models.DateTimeField(auto_now_add=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.text"""
